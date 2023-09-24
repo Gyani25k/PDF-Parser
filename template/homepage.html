@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF-Parser</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='file.css') }}">
+</head>
+<div id="uploadArea" class="upload-area">
+    <div class="upload-area__header">
+      <h1 class="upload-area__title">Upload your file</h1>
+      <p class="upload-area__paragraph">
+        File should be 
+        <strong class="upload-area__tooltip">
+          Like
+          <span class="upload-area__tooltip-data"></span> 
+        </strong>
+      </p>
+    </div>
+    <div id="dropZoon" class="upload-area__drop-zoon drop-zoon">
+      <span class="drop-zoon__icon">
+        <i class='bx bxs-file-image'></i>
+      </span>
+      <p class="drop-zoon__paragraph">Drop your file here or Click to browse</p>
+      <span id="loadingText" class="drop-zoon__loading-text">Please Wait</span>
+      <img id="pdfThumbnail" class="file-thumbnail" src="https://cdn.pixabay.com/photo/2017/03/08/21/20/pdf-2127829_1280.png" alt="PDF Thumbnail" style="display: none;">
+      <img src="" alt="Preview Image" id="previewImage" class="drop-zoon__preview-image" draggable="false">
+      <input type="file" id="fileInput" class="drop-zoon__file-input">
+    </div>
+      <div id="fileDetails" class="upload-area__file-details file-details">
+      <h3 class="file-details__title">Uploaded File</h3>
+  
+      <div id="uploadedFile" class="uploaded-file">
+        <div class="uploaded-file__icon-container">
+          <i class='bx bxs-file-blank uploaded-file__icon'></i>
+          <span class="uploaded-file__icon-text"></span>
+        </div>
+        <div id="uploadedFileInfo" class="uploaded-file__info">
+          <span class="uploaded-file__name">Proejct 1</span>
+          <span class="uploaded-file__counter">0%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+        <button id="analyzeEmotionsBtn" class="analyze-emotions-button" style="display: none;">Extract PDF Data</button>
+    </div>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="download" href="#" id="downloadButton">Download</span>
+        <h2>Your Result</h2>
+        <div id="tableContainer" class="table-container">
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+    
+    
+  </div>
+  <script src="{{ url_for('static', filename='file.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</html>
