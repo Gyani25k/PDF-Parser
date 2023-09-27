@@ -240,10 +240,16 @@ def extract_table_from_pdf(pdf_file_path):
         for line in lines:
             date_pattern = r'(?:\d{2}/\d{2}(?:/\d{2})?|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{1,2})'
             text_pattern = r'[\w\s\*\#\/]+'
-            amount_pattern = r'-?\d{1,3}(?:,\d{3})*\.\d{2}'
+            amount_pattern = r'-?\s*\$[\d,]+\.\d{2}'
+
+            # amount_pattern = r'-?\d{1,3}(?:,\d{3})*\.\d{2}'
             date_matches = re.findall(date_pattern, line)
             text_match = re.search(text_pattern, line)
             amount_match = re.search(amount_pattern, line)
+            if amount_match==None:
+                amount_pattern = r'-?\d{1,3}(?:,\d{3})*\.\d{2}'
+                amount_match = re.search(amount_pattern, line)
+            print("Amount",amount_match)
 
             if len(date_matches) == 2:
                 date1, date2 = date_matches
@@ -261,6 +267,10 @@ def extract_table_from_pdf(pdf_file_path):
             #####################
             category_match = re.search(rf'{amount_pattern}\s+(.*)$', line)
             category = category_match.group(1) if category_match else None
+            if category and not any(c.isdigit() for c in category):
+                category=category
+            else:
+                category=None
 
             try:
                 if len(date1[0]) == 1:

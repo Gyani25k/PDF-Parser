@@ -10,13 +10,14 @@ const uploadedFileName = document.querySelector('.uploaded-file__name');
 const uploadedFileIconText = document.querySelector('.uploaded-file__icon-text');
 const uploadedFileCounter = document.querySelector('.uploaded-file__counter');
 const toolTipData = document.querySelector('.upload-area__tooltip-data');
+
 const validFileTypes = [
     "application/pdf" 
 ];
 
 const imagesTypes = [
-"pdf"
-];
+"pdf" ];
+
 toolTipData.innerHTML = [...imagesTypes].join(', .');
 const docThumbnail = document.querySelector('#docThumbnail');
 const excelThumbnail = document.querySelector('#excelThumbnail');
@@ -201,12 +202,9 @@ function displaySentimentResult(data) {
       headerRow.appendChild(th);
     });
 
-    // Append the header row to the table
     table.appendChild(headerRow);
 
-    // Create table rows and cells for each data item
     data.forEach((item) => {
-      // Check if any data value in the row is null or empty
       if (columns.every((column) => !item[column])) {
         // Skip this row if all data values are null or empty
         return;
@@ -229,7 +227,7 @@ function displaySentimentResult(data) {
     tableContainer.appendChild(table);
   } else {
     // If there is no data, display a message
-    tableContainer.textContent = 'No data available.';
+    tableContainer.textContent = 'It looks like we could not find the appropriate data in this file. Please double-check the file and try again.';
   }
 }
 
