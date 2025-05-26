@@ -28,7 +28,7 @@ def extract_from_pdf(pdf_file_path):
     column3 = []
 
     with pdfplumber.open(pdf_file_path) as pdf:
-        is_transactions_section = False
+        is_transactions_section = false
         for page in pdf.pages:
             text = page.extract_text()
             lines = text.split('\n')
@@ -41,7 +41,7 @@ def extract_from_pdf(pdf_file_path):
                             column2.append(parts[1])
                             column3.append(parts[2])
                 elif "Transactions" in line:
-                    is_transactions_section = True
+                    is_transactions_section = true
     
     if column1 and column2 and column3:
         df = pd.DataFrame({
@@ -69,12 +69,13 @@ def extract_from_pdf(pdf_file_path):
 
         df = df.drop(columns=['Description'])
         response=[]
-        for index,row in df.iterrows():
-            response.append({"Transaction Date":row['Transaction Date'],
-                            "Post Date":row['Post Date'],
-                            "Description":row['NewDescription'],
-                            "Amount":row['Amount'],
-                            "Category":row['Category']})
+        
+        for row in df.itertuples(index=true):
+            response.append({"Transaction Date": row._1,
+                            "Post Date": row._2,
+                            "Description": row.NewDescription,
+                            "Amount": row.Amount,
+                            "Category": row.Category})
 
         temp={"data":response,"message":"Data Extracted Successfully"}
     
@@ -99,11 +100,11 @@ def extract_from_pdf(pdf_file_path):
             df = pd.DataFrame(transactions)
             print(df.columns)
             response=[]
-            for index,row in df.iterrows():
-                response.append({"Transaction Date":row['Transaction Date'],
-                                "Post Date":row['Post Date'],
-                                "Description":row['Description'],
-                                "Amount":row['Amount']})
+            for row in df.itertuples(index=true):
+                response.append({"Transaction Date":row._1,
+                                "Post Date":row._2,
+                                "Description":row._3,
+                                "Amount":row._4})
 
             temp={"data":response,"message":"Data Extracted Successfully"}
         else:
@@ -134,12 +135,12 @@ def extract_from_pdf(pdf_file_path):
                 response=[]
                 df = pd.DataFrame(transactions1)
                 print(df.columns)
-                for index,row in df.iterrows():
+                for row in df.itertuples(index=true):
                     response.append({
-                                "SaleDate": row['SaleDate'],
-                                "PostDate": row['PostDate'],
-                                "Description": row['Description'],
-                                "Amount": row['Amount']
+                                "SaleDate": row._1,
+                                "PostDate": row._2,
+                                "Description": row._3,
+                                "Amount": row._4
                             })
 
                 temp = {"data": response, "message": "Data Extracted Successfully"}
@@ -175,11 +176,11 @@ def extract_from_pdf(pdf_file_path):
                 df = pd.DataFrame(data, columns=["Date", "Description", "Amount"])
                 print(df.columns)
                 response = []
-                for index, row in df.iterrows():
+                for row in df.itertuples(index=true):
                     response.append({
-                        "Date": row['Date'],
-                        "Description": row['Description'],  # Adjust this based on method
-                        "Amount": row['Amount'],  # Adjust this based on method
+                        "Date": row._1,
+                        "Description": row._2,  # Adjust this based on method
+                        "Amount": row._3,  # Adjust this based on method
                     })
 
                 temp = {"data": response, "message": "Data Extracted Successfully"}
@@ -203,12 +204,12 @@ def extract_from_pdf(pdf_file_path):
 
         df = pd.DataFrame(matches, columns=["DATE", "DESCRIPTION", "AMOUNT", "BALANCE"])
         response = []
-        for index, row in df.iterrows():
+        for row in df.itertuples(index=true):
             response.append({
-                "DATE": row['DATE'],
-                "DESCRIPTION": row['DESCRIPTION'],
-                "AMOUNT": row['AMOUNT'],
-                "BALANCE": row["BALANCE"]
+                "DATE": row._1,
+                "DESCRIPTION": row._2,
+                "AMOUNT": row._3,
+                "BALANCE": row._4
             })
         temp = {"data": response, "message": "Data Extracted Successfully"}
 
@@ -222,7 +223,7 @@ def extract_table_from_pdf(pdf_file_path):
 
     with pdfplumber.open(pdf_file_path) as pdf:
         is_month_name = lambda line: any(month.lower() in line.lower() for month in ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"])
-        is_transactions_section = False
+        is_transactions_section = false
         for page in pdf.pages:
             text = page.extract_text()
             lines = text.split('\n')
@@ -231,7 +232,7 @@ def extract_table_from_pdf(pdf_file_path):
                     if line[:8].count('/') == 1 or line[:8].count('/') == 2 or is_month_name(line) and "$" in line:
                         column.append(line)
                 elif "date" and "amount"  in line.lower():
-                    is_transactions_section = True
+                    is_transactions_section = true
     ex_data = []
     import re
 
@@ -246,7 +247,7 @@ def extract_table_from_pdf(pdf_file_path):
             date_matches = re.findall(date_pattern, line)
             text_match = re.search(text_pattern, line)
             amount_match = re.search(amount_pattern, line)
-            if amount_match==None:
+            if amount_match==null:
                 amount_pattern = r'-?\d{1,3}(?:,\d{3})*\.\d{2}'
                 amount_match = re.search(amount_pattern, line)
             print("Amount",amount_match)
@@ -254,23 +255,23 @@ def extract_table_from_pdf(pdf_file_path):
             if len(date_matches) == 2:
                 date1, date2 = date_matches
             else:
-                date1, date2 = date_matches, [None]
+                date1, date2 = date_matches, [null]
 
-            text_value = text_match.group() if text_match else None
-            amount_value = amount_match.group() if amount_match else None
+            text_value = text_match.group() if text_match else null
+            amount_value = amount_match.group() if amount_match else null
 
-            description = text_value[6:] if text_value else None
+            description = text_value[6:] if text_value else null
             ####   new code #########
             cleaned_description = re.sub(date_pattern, '', description)
             cleaned_description = re.sub(r'^\d+', '', cleaned_description)
             cleaned_description = cleaned_description.strip()
             #####################
             category_match = re.search(rf'{amount_pattern}\s+(.*)$', line)
-            category = category_match.group(1) if category_match else None
+            category = category_match.group(1) if category_match else null
             if category and not any(c.isdigit() for c in category):
                 category=category
             else:
-                category=None
+                category=null
 
             try:
                 if len(date1[0]) == 1:
@@ -278,7 +279,7 @@ def extract_table_from_pdf(pdf_file_path):
                 else:
                     datesf = date1[0]
             except:
-                datesf = None
+                datesf = null
 
             try:
                 if len(date2[0]) == 1:
@@ -286,10 +287,10 @@ def extract_table_from_pdf(pdf_file_path):
                 else:
                     datesl = date2[0]
             except:
-                datesl = None
+                datesl = null
 
-            if datesl is None:
-                if category is None:
+            if datesl is null:
+                if category is null:
                     extracted_values = {
                         "Transaction Date": datesf,
                         "Description": cleaned_description,
@@ -311,9 +312,9 @@ def extract_table_from_pdf(pdf_file_path):
                     "Category": category
                 }
 
-            # Add a case where only "category" is None
-            if category is None:
-                if datesl is None:
+            # Add a case where only "category" is null
+            if category is null:
+                if datesl is null:
                     extracted_values = {
                         "Transaction Date": datesf,
                         "Description": cleaned_description,
@@ -329,7 +330,7 @@ def extract_table_from_pdf(pdf_file_path):
 
 
             ex_data.append(extracted_values)
-    filtered_ex_data = [entry for entry in ex_data if all(value is not None for value in entry.values())]
+    filtered_ex_data = [entry for entry in ex_data if all(value is not null for value in entry.values())]
     
     return json.dumps(filtered_ex_data)
     
@@ -354,4 +355,4 @@ def extract_pdf_data():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8000)
+    app.run(debug=true,port=8000)
