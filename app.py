@@ -5,6 +5,7 @@ import pdfplumber
 import pandas as pd
 import re
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder='template')
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -37,7 +38,8 @@ def register():
             flash('Username already exists')
             return redirect(url_for('register'))
 
-        new_user = User(username=username, password=password)  # Hash password before saving
+        hashed_password = generate_password_hash(password, method='sha256')
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
@@ -53,7 +55,7 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(username=username).first()
-        if not user or not user.password == password:  # Hash compare instead
+        if not user or not check_password_hash(user.password, password):
             flash('Invalid credentials')
             return redirect(url_for('login'))
 
