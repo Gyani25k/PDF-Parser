@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 import pdfplumber
 import pandas as pd
 import re
@@ -16,9 +17,9 @@ login_manager.login_view = 'login'
 
 
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=true)
-    username = db.Column(db.String(150), unique=true, nullable=false)
-    password = db.Column(db.String(150), nullable=false)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
 
 
 @login_manager.user_loader
@@ -37,7 +38,8 @@ def register():
             flash('Username already exists')
             return redirect(url_for('register'))
 
-        new_user = User(username=username, password=password)  # Hash password before saving
+        hashed_password = generate_password_hash(password, method='sha256')
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
@@ -53,7 +55,7 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(username=username).first()
-        if not user or not user.password == password:  # Hash compare instead
+        if not user or not check_password_hash(user.password, password):
             flash('Invalid credentials')
             return redirect(url_for('login'))
 
@@ -107,4 +109,4 @@ def extract_table_from_pdf(pdf_file_path):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=true, port=8000)
+    app.run(debug=True, port=8000)
