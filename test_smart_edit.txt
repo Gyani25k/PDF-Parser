@@ -1,0 +1,4 @@
+
+# This is a test addition
+# Added by smart editor
+print('Hello from smart editor!')
