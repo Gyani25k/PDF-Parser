@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>PDF Parser</title>
+</head>
+<body>
+    <h1>PDF Parser</h1>
+    <form id="upload-form">
+        <label for="pdf-file">Choose a PDF file:</label>
+        <input type="file" id="pdf-file" name="pdf-file" accept="application/pdf" required>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="auth">
+        <h2>Authentication</h2>
+        <form id="auth-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>
